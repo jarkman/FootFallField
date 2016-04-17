@@ -19,8 +19,9 @@
 
 import processing.serial.*;
 
-public static boolean demoMode = true; // set true to run without a real lidar, with simulated footsteps
+public static boolean demoMode = false; // set true to run without a real lidar, with simulated footsteps
 public static boolean usingMirror = false; // set true to run when projecting via a mirror to get left/right swap
+public static boolean drawDebugFurniture = false; // set true to draw feet, background, etc
 
 public static boolean skipCalibration = true; // set to omit calibration altogether
 public static boolean debugCalibrate = false; // set to debug calibration without the real test rig
@@ -38,8 +39,8 @@ public static PersonManager personManager;                              // Manag
 void setup() 
 {
   
-  size(1200,700); //fixed canvas size to match projector
-  //fullScreen();
+  //size(1200,700); //fixed canvas size to match projector
+  fullScreen();
 
   calibration = new Calibration( width, height );
   
@@ -48,7 +49,8 @@ void setup()
   
   footManager.openPort(this);
   
-  debugEffect = new DebugEffect();
+  if( drawDebugFurniture )
+    debugEffect = new DebugEffect();
   
 
    calibrationEffect = new CalibrationEffect();
@@ -65,7 +67,7 @@ void setup()
    menuEffect.addEffect(new RippleEffect());
    menuEffect.addEffect(new ParticleSimEffect() );
 
-   changeEffect(menuEffect.effects.get(6));
+   changeEffect(menuEffect.effects.get(5));
 }
 
 void changeEffect(Effect effect)

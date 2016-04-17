@@ -18,6 +18,9 @@ class Background
   
   void draw()
 {
+  if( ! drawDebugFurniture )
+    return;
+    
   strokeWeight(2);
   rectMode(CENTER);
   

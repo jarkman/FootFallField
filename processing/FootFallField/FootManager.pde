@@ -114,7 +114,7 @@ class FootManager
     println(Serial.list()); // print the available serial ports
     
     String portName;
-    if( true ) // on mac )
+    if( false ) // on mac )
     {
       portName = Serial.list()[5]; //change the 0 to a 1 or 2 etc. to match your port
     }
