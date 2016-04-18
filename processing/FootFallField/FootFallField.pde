@@ -19,6 +19,7 @@
 
 import processing.serial.*;
 
+
 public static boolean demoMode = false; // set true to run without a real lidar, with simulated footsteps
 public static boolean usingMirror = false; // set true to run when projecting via a mirror to get left/right swap
 public static boolean drawDebugFurniture = false; // set true to draw feet, background, etc
@@ -39,9 +40,11 @@ public static PersonManager personManager;                              // Manag
 void setup() 
 {
   
-  //size(1200,700); //fixed canvas size to match projector
-  fullScreen();
-
+ 
+  //  fullScreen();
+  
+  size(800,600); // HDMI mode we intend to run live in
+    
   calibration = new Calibration( width, height );
   
   footManager = new FootManager();
@@ -59,15 +62,15 @@ void setup()
    menuEffect = new MenuEffect();
    // Add each effect to the menu here so it can offer them as choices 
    menuEffect.addEffect(new GravityEffect()); 
-   menuEffect.addEffect(new BubbleEffect()); 
+   //menuEffect.addEffect(new BubbleEffect()); 
    menuEffect.addEffect(new BallEffect()); 
-   menuEffect.addEffect(new SplatEffect()); 
+   //menuEffect.addEffect(new SplatEffect()); 
 
    menuEffect.addEffect(new LineEffect());
    menuEffect.addEffect(new RippleEffect());
    menuEffect.addEffect(new ParticleSimEffect() );
 
-   changeEffect(menuEffect.effects.get(5));
+   changeEffect(menuEffect.effects.get(0));
 }
 
 void changeEffect(Effect effect)

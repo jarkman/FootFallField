@@ -5,8 +5,8 @@
 class GridPoint
 {
   PVector origin, position;
-  float toPlanetMult = 1000; // sets range
-  float toOriginMult = 0.05;  // sets speed
+  float toPlanetMult = 200; // sets range
+  float toOriginMult = 0.02;  // sets speed
 
   GridPoint(int x, int y)
   {
@@ -30,6 +30,7 @@ class GridPoint
         toTarget.limit(min(toPlanetMult/distToTarget, distToTarget));
       
       position.add(toTarget);
+      
     }
     
     update();
@@ -123,7 +124,7 @@ GravityEffect()
   {
 
     noFill();
-    strokeWeight(10);
+    strokeWeight(5);
     stroke(color(0, 255, 0));
     
     //Draw horizontal lines

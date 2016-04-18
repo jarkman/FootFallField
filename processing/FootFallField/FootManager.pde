@@ -6,6 +6,7 @@ class FootManager
   public ArrayList<Reading> readings = new ArrayList<Reading>();   // All the Lidar readings
   public ArrayList<Reading> feet = new ArrayList<Reading>();       // Foot locations inferred from clusters of Lidar points
 
+  boolean traceadd = false;
 
   Serial myPort;
   Background background = new Background();
@@ -212,8 +213,11 @@ void parseBuffer()
       rotationCounter++;
       
       // Clean out old data from last rotation, if we didn't already clean it up in addReading()
+      if( traceadd ) println("c1");
       cleanReadingsBeforeRotation(readings, rotationCounter ); 
+      if( traceadd ) println("c2");
       cleanReadingsBeforeRotation( feet, rotationCounter ); 
+      if( traceadd ) println("c3");
       FootFallField.personManager.cleanBeforeRotation( rotationCounter ); 
 
        print("got ");
@@ -229,9 +233,11 @@ void parseBuffer()
     {
       //reading.printDiag();
       // add a new foot
-
+      if( traceadd )  println("a");
       addReading( reading, readings );
+      if( traceadd ) println("u");
       updateCurrentFoot(reading); //<>// //<>//
+      if( traceadd )  println("u2");
      
     }
     else
@@ -277,11 +283,16 @@ void updateCurrentFoot( Reading reading )
         int range = (currentFootStartRange + currentFootEndRange)/2; 
         int tick = (currentFootStartTick + currentFootEndTick) / 2;  // in the middle
         Reading newFoot = new Reading( range, tick, reading.rotationCounter );
+        if( traceadd )  println("s1");
         synchronized( feet )
         {
+          if( traceadd )  println("s2");
           addReading( newFoot, feet );
+          if( traceadd ) println("s3");
           FootFallField.personManager.updateForFoot( newFoot );
+          if( traceadd ) println("s4");
           notifyNewFoot( newFoot );
+          if( traceadd )  println("s5");
         }
       }
     }
@@ -343,8 +354,10 @@ void addReading( Reading reading, ArrayList<Reading> readings )
   boolean inserted = false;
   // remove all feet from older runs and insert this one
   // keep feet in tick order
+  if( traceadd )  println("ar1");
   synchronized( readings )
   {
+    if( traceadd ) println("ar2");
     for( int i = 0; i < readings.size(); )
     {
       Reading target = readings.get(i);
@@ -361,7 +374,9 @@ void addReading( Reading reading, ArrayList<Reading> readings )
         else
         {
           if( ! isMouseFoot(target))
-          readings.remove(i); // just remove later obsolete ones
+            readings.remove(i); // just remove later obsolete ones
+          else
+            i++;
         }
         
       }
@@ -380,9 +395,12 @@ void addReading( Reading reading, ArrayList<Reading> readings )
       }
     }
     
+    if( traceadd ) println("ar3");
     if( ! inserted )
           readings.add(reading); // put it on the end
   }
+  
+  if( traceadd )  println("ar4");
 }
 
 void scanToNull()
