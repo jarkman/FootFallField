@@ -326,6 +326,10 @@ class Particle_c {
   float p_collision;  // probability between 0.1 and 1
   float t_collision;  // time of last collision.
   
+  float extraBoundaryBounce = 3; // give balls an extra kick away from the edge to reduce boundary clustering
+  float temperature = 0.1; // used to add a little random velocity to keep particles on the move
+
+
   color col;
   // Constructor, id required to check against self-collision later.
   Particle_c( int _id ) {
@@ -366,6 +370,8 @@ class Particle_c {
     
     // Slowly reduces any velocity to zero.
     applyFriction();
+    
+    applyHeat(); // add a tiny bit of velocity to keep the particles moving 
     
     // Apply velocity for this update cycle.
     position.add(velocity);
@@ -436,6 +442,14 @@ class Particle_c {
      //velocity.y += 0.9;
   }
   
+  // Add a small random velocity to keep the particles stirred up.
+  void applyHeat() {
+     
+    velocity.x += temperature * random(-1.0, 1.0);
+    velocity.y += temperature * random(-1.0, 1.0);
+    
+  }
+  
   void checkCollisionWithOthersKDTree() {
      int i = kd_tree.getNNIndex( new Point( this.position.x, this.position.y, this.id ) ); 
      if( i < 0 ) return;
@@ -457,21 +471,27 @@ class Particle_c {
   // Inverse the velocity depending on the screen
   // edge collision.
   void checkBoundaryCollision() {
+    
+    
     if (position.x > width-r) {
       position.x = width-r;
-      velocity.x *= -1;
+      velocity.x *= -1 ;
+      velocity.x -= extraBoundaryBounce;
     } 
     else if (position.x < r) {
       position.x = r;
-      velocity.x *= -1;
+      velocity.x *= -1 ;
+      velocity.x += extraBoundaryBounce;
     } 
     else if (position.y > height-r) {
       position.y = height-r;
-      velocity.y *= -1;
+      velocity.y *= -1 ;
+      velocity.y -= extraBoundaryBounce;
     } 
     else if (position.y < r) {
       position.y = r;
-      velocity.y *= -1;
+      velocity.y *= -1 ;
+      velocity.y = extraBoundaryBounce;
     }
   }
 
