@@ -19,7 +19,7 @@
 
 import processing.serial.*;
 
-public static boolean demoMode = false; // set true to run without a real lidar, with simulated footsteps
+public static boolean demoMode = true; // set true to run without a real lidar, with simulated footsteps
 public static boolean usingMirror = false; // set true to run when projecting via a mirror to get left/right swap
 public static boolean drawDebugFurniture = false; // set true to draw feet, background, etc
 
