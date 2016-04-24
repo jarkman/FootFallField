@@ -21,7 +21,7 @@ import processing.serial.*;
 
 
 public static boolean demoMode = false; // set true to run without a real lidar, with simulated footsteps
-public static boolean usingMirror = false; // set true to run when projecting via a mirror to get left/right swap
+public static boolean usingMirror = true; // set true to run when projecting via a mirror to get left/right swap
 public static boolean drawDebugFurniture = false; // set true to draw feet, background, etc
 
 public static boolean skipCalibration = true; // set to omit calibration altogether
@@ -41,9 +41,23 @@ void setup()
 {
   
  
-  //  fullScreen();
+  // comment in either size() or fullscreen() line
   
-  size(800,600); // HDMI mode we intend to run live in
+  // To run with real projector, change pi resolution to 576p with 
+  // sudo nano /boot/config.txt
+  // and edit these lines:
+  //  hdmi_group=1
+  //  hdmi_mode=17
+  // and comment in the fullscreen line below
+
+  // To run on laptop/on pi during developement, comment in the size() 
+  // line instead so we get a resolution of about the same but in a smaller window
+  
+  // Resolution makes a big difference to the speed we run at
+  
+  fullScreen(); 
+  
+  // size(800,600); 
     
   calibration = new Calibration( width, height );
   
