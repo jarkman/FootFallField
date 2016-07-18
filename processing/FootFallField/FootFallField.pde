@@ -66,7 +66,7 @@ void setup()
    menuEffect = new MenuEffect();
    // Add each effect to the menu here so it can offer them as choices 
    menuEffect.addEffect(new GravityEffect()); 
-   //menuEffect.addEffect(new BubbleEffect()); 
+   menuEffect.addEffect(new BubbleEffect()); 
    menuEffect.addEffect(new BallEffect()); 
    //menuEffect.addEffect(new SplatEffect()); 
 
@@ -74,7 +74,7 @@ void setup()
    menuEffect.addEffect(new RippleEffect());
    menuEffect.addEffect(new ParticleSimEffect() );
 
-   changeEffect(menuEffect.effects.get(3));
+   changeEffect(menuEffect.effects.get(5));
 }
 
 void changeEffect(Effect effect)
