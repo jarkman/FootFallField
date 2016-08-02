@@ -17,7 +17,7 @@ class Calibration
   int screenWidth;
   int screenHeight;
   
-  ArrayList<CalibrationPoint> points;
+  ArrayList<CalibrationPoint> points;  // record the four points we collect at calibration time
   
   Calibration( int w, int h )
   {
@@ -32,15 +32,22 @@ class Calibration
 
     points = new ArrayList<CalibrationPoint>();
     
-    points.add( new CalibrationPoint( new Reading( 11,12,millis(),1), new PVector( 101, 102 ) ));
-    points.add( new CalibrationPoint( new Reading( 10,90,millis(),1), new PVector( 103, 901 ) ));
+    // same sequence as CalibrationEffect.markerForN
+    // layout like this on screen, remember that screen origin is in top left, lidar origin is bottom middle!
+    // 0  1
+    // 3  2                                    lidar points in cm                 screen points in cm
+    points.add( new CalibrationPoint( new Reading( -198,6,millis(),1), new PVector( 12, 17 ) ));
+    points.add( new CalibrationPoint( new Reading( 190, 4,millis(),1), new PVector( 910, 9 ) ));
  
-    points.add( new CalibrationPoint( new Reading( 91,92,millis(),1), new PVector( 902, 903 ) ));
-     points.add( new CalibrationPoint( new Reading( 93,18,millis(),1), new PVector( 904, 104 ) ));
+    points.add( new CalibrationPoint( new Reading( 196,180,millis(),1), new PVector( 902, 602 ) ));
+    points.add( new CalibrationPoint( new Reading( -194,185,millis(),1), new PVector( 22, 590 ) ));
+  
  
-    testPoint( 100,100 );
-    testPoint( 900,100 );
-    testPoint( 900,900 );
+    testPoint( 1, 100 ); // x,y in cm from sensor
+    testPoint( 0,0 );
+    testPoint( -100,1 );
+    testPoint( -100,200 );
+    testPoint( 100,200 );
      
     points = null;
   }
@@ -48,14 +55,16 @@ class Calibration
   void testPoint( int x, int y )
   {
      PVector p = screenPosForXY( x, y );
+     print("lidar point ");
      print( x );
      print(", ");
      print( y );
-     print( " maps to " );
+     print( " cm maps to screen pos " );
       print(p.x);
       print(", ");
      println( p.y );
   }
+  
   int maxLidarX()
   {
     return lidarWidth/2;
@@ -111,7 +120,26 @@ class Calibration
       
     return true;
   }
-  
+  /*
+  PVector screenPosForXY( float px, float py )
+  {
+    // from http://math.stackexchange.com/questions/13404/mapping-irregular-quadrilateral-to-a-rectangle  
+    // ... is to decompose your problem like this  ...
+    
+    if( points == null || points.size() != 4 )  // no calibration data yet
+      return screenPosForXYUncalibrated( px, py ); // just so we can draw something
+      
+    Reading a = points.get(0).foot;
+    Reading b = points.get(1).foot;
+    Reading c = points.get(2).foot;
+    Reading d = points.get(3).foot;
+    
+     print("a " + a.x + ", " + a.y + " b " + b.x + ", " + b.y  );
+     print(" c " + c.x + ", " + c.y + " d " + d.x + ", " + d.y  );
+ 
+     print("px " + px + ", py " + py );
+   */
+   
   PVector screenPosForXY( float px, float py ) //<>//
   {
     if( points == null || points.size() != 4 )  // no calibration data yet //<>//
@@ -122,6 +150,12 @@ class Calibration
     Reading c = points.get(2).foot;
     Reading d = points.get(3).foot;
     
+     println("----------------------");
+     println("a " + a.x + ", " + a.y + " b " + b.x + ", " + b.y  );
+     println(" c " + c.x + ", " + c.y + " d " + d.x + ", " + d.y  );
+ 
+     println("px " + px + ", py " + py );
+ 
     
 
     float C = (float)(a.y - py) * (d.x - px) - (float)(a.x - px) * (d.y - py); //<>//
@@ -140,7 +174,10 @@ class Calibration
       print(", ");
      println( D );
      
-      float u = (-B - sqrt((float)D)) / (2 * A);
+     
+    println("(-B - sqrt(D)) ", (-B - sqrt(D)));
+     
+      float u = (-B - sqrt(D)) / (2 * A);
 
       float p1x = a.x + (b.x - a.x) * u;
       float p2x = d.x + (c.x - d.x) * u;
@@ -148,6 +185,12 @@ class Calibration
 
       float v = (px - p1x) / (p2x - p1x);
       
+      PVector sa = points.get(0).screenPos;
+    PVector sb = points.get(1).screenPos;
+    PVector sc = points.get(2).screenPos;
+    PVector sd = points.get(3).screenPos;
+    
+    
       print("uv: ");
       print( u );
      print(", ");
@@ -162,9 +205,10 @@ class Calibration
      
       // u and v are normalised so 0->1 maps to the side of the rectangle
       // now calculate the screen coordinates for p
-      
-      float sx = a.x + u * (b.x - a.x);
-      float sy = a.y + v * (c.y - a.y);
+      // sa   sb
+      // sd   sc 
+      float sx = sa.x + u * (sb.x - sa.x);
+      float sy = sa.y + v * (sc.y - sa.y);
       
       print("sx sy: ");
       print( sx );

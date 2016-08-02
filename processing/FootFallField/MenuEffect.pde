@@ -41,11 +41,13 @@ class MenuEffect extends Effect
       }
       if( target != null )
       {
+         println("menuEffect - changing to " + target.getClass() );
         changeEffect( target );  // show the new effect
         inactivate();            // and stop showing menu choices
       }
       else if( millis() - activationStart > 10000 ) // time out after 10s
       {
+        println("menuEffect - timed out, deactivating");
         inactivate();
       }
     }
@@ -62,6 +64,7 @@ class MenuEffect extends Effect
   
   void activate()
   {
+    println("menuEffect - activating");
     initButton.reset();
     
     float x = -100;

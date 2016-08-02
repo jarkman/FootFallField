@@ -75,6 +75,9 @@ class CalibrationEffect extends Effect
   {
     switch( n )
     {
+      // on screen:
+      //  0   1
+      //  3   2
       case 0: return new PVector( 0.1 * width, 0.1 * height );
       case 1: return new PVector( 0.9 * width, 0.1 * height );
       case 2: return new PVector( 0.9 * width, 0.9 * height );

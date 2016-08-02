@@ -12,6 +12,7 @@ class Bubble
   //sa: stroke color alpha
   //x_goal, y_goal: a foot to aim for
 
+
   Bubble (float x_in,float y_in,float d_in,float sw_in,float sr_in,float sg_in,float sb_in,float sa_in, float xh_in, float yh_in,float sp_x_in, float sp_y_in, float x_goal_in, float y_goal_in)
   { x=x_in; y=y_in; d=d_in; sw=sw_in; sr=sr_in; sg=sg_in; sb=sb_in; sa=sa_in; xh=xh_in; yh=yh_in; sp_x=sp_x_in;sp_y=sp_y_in; x_goal=x_goal_in;y_goal=y_goal_in ;}
 
@@ -20,6 +21,8 @@ class Bubble
 
 class BubbleEffect extends Effect
 {
+    float speed = 2;
+  
   float diaIncreaseRate = 6; //diameter increasing rate
   float strokeDecreaseRate = 0.3; //stroke weight decreasing rate
 
@@ -44,14 +47,14 @@ class BubbleEffect extends Effect
         }else{
           // head towards X and Y
           if(bubble.x > bubble.x_goal){
-              bubble.x = bubble.x - 20;
+              bubble.x = bubble.x - speed;
           }else{
-              bubble.x = bubble.x + 20;
+              bubble.x = bubble.x + speed;
           }
           if(bubble.y > bubble.y_goal){
-              bubble.y = bubble.y - 20;
+              bubble.y = bubble.y - speed;
           }else{
-              bubble.y = bubble.y + 20;
+              bubble.y = bubble.y + speed;
           }      
           stroke(bubble.sr, bubble.sg, bubble.sb, bubble.sa);
           fill(bubble.sr, bubble.sg, bubble.sb, 127);

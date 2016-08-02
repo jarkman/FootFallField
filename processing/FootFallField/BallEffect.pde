@@ -19,31 +19,50 @@ class Ball
 
 class BallEffect extends Effect
 {
+  float footHalfSize = 20;
 
-  Ball ball = new Ball(0,0,60,30,255,255,0, 250, 90.0, 90.0, 7.0, 7.0);
+  Ball ball = new Ball(50,50,60,30,255,255,0, 250, 40,40, 7.0, 7.0);
   String imageName() { return "ball.png"; }
   void draw(ArrayList<Reading> readings, ArrayList<Reading> feet, ArrayList<Person> people)
   {
  
     noFill();
     strokeWeight(2);
-    ellipseMode(CORNER);
+    ellipseMode(CENTER);
 
+    // draw feet, so players know what they are doing
     if( feet != null )
     {
       synchronized( feet )  
       {
+        stroke(60);
+        
         for( Reading reading : feet)
         {
       
-          
           PVector screenPos = FootFallField.calibration.screenPosForReading( reading );
-          {
-            stroke(60);
-            fill(100, 200, 0);
-            ellipse(screenPos.x, screenPos.y, 40, 40);
+
+          if (screenPos.y  < (ball.y + ball.yh) && screenPos.y > (ball.y - ball.yh)
+             && screenPos.x < (ball.x + ball.xh)  && screenPos.x > (ball.x - ball.xh) ) 
+           {
+             // if the ball hits the foot, bounce
+             ball.sp_y = -ball.sp_y * random(0.8, 1.2);
+             ball.sp_x = -ball.sp_x * random(0.8, 1.2);
+             fill(250,0,0);
+           }
+           else
+           {
+             fill(100, 200, 0);
+           }
+      
+           
+           
+           ellipse(screenPos.x, screenPos.y, 2*footHalfSize, 2*footHalfSize);
      
-          }
+         
+          
+       
+      
         }
       }
     }
@@ -52,7 +71,7 @@ class BallEffect extends Effect
     stroke(ball.sr, ball.sg, ball.sb, ball.sa);
     fill(ball.sr, ball.sg, ball.sb);
     //draw the circle in its current position
-    ellipse(ball.x, ball.y, ball.xh, ball.yh);
+    ellipse(ball.x, ball.y, ball.xh*2, ball.yh*2);
   
     //add a little gravity to the speed
     //ball.sp = ball.sp + 0.5; 
@@ -61,34 +80,34 @@ class BallEffect extends Effect
     ball.y = ball.y + ball.sp_y;
     ball.x = ball.x + ball.sp_x;  
 
-    if (ball.y >= height) {
+    if (ball.y + ball.yh >= height) {
        // if the ball hits the bottom, bounce
        ball.sp_y = -ball.sp_y * random(0.8, 1.2);  
-       ball.y = height-1;
+       ball.y = height-ball.yh-1;
     }
-    if (ball.y <= 0) {
+    if (ball.y - ball.yh <= 0) {
       // if the ball hits the top, bounce
       ball.sp_y = -ball.sp_y * random(0.8, 1.2);
-      ball.y = 1;
+      ball.y =  ball.yh + 1;
     }
     
-    if (ball.x >= width) {
+    if (ball.x + ball.xh >= width) {
       //if the ball hits the right, bounce
        ball.sp_x = -ball.sp_x;   
-       ball.x = width -1;
+       ball.x = width - ball.xh -1;
     }
     
-    if (ball.x <= 0) {
+    if (ball.x - ball.xh<= 0) {
       //if the ball hits the left, bounce
       ball.sp_x = -ball.sp_x;
-      ball.x = 1;
+      ball.x = ball.xh + 1;
     }
     
   }
   
     void notifyNewFoot( Reading foot )
     {
-      
+      /*
       PVector screenPos = FootFallField.calibration.screenPosForReading( foot );
       if (screenPos.y < (ball.y + ball.yh) && screenPos.y > (ball.y - ball.yh)
          && screenPos.x < (ball.x + ball.xh)  && screenPos.x > (ball.x - ball.xh) ) {
@@ -96,6 +115,7 @@ class BallEffect extends Effect
          ball.sp_y = -ball.sp_y * random(0.8, 1.2);
          ball.sp_x = -ball.sp_x * random(0.8, 1.2);
       }
+      */
 
 /*
         //if ball position is within the splat, bounce it

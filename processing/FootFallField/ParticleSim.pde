@@ -15,17 +15,19 @@ class ParticleSimEffect extends Effect {
   // For sparse particles, bigger is better.
   final float FOOTFALL_RADIUS = 100;
 
-  final float FRICTION_GAIN = 0.92;  // closer to 1, less friction
+  final float FRICTION_GAIN = 0.98;  // closer to 1, less friction
   final long FOOTFALL_TIMEOUT = 1000; //milli seconds expiry.
+  
+  final float footRepulsionVelocity = 0.001; // scale foot repulsion velocity from range
   
   // Be careful with how many particles you pack in
   // and their max radius.  Too dense and you get some
   // jiggling with collision detection. 
   // Also, you see less of the collision 'mistakes' when
   // the particles are smaller :$
-  final int MAX_PARTICLES = 500; 
-  final float MIN_PARTICLE_DIAMETER = 1;
-  final float MAX_PARTICLE_DIAMETER = 8;
+  final int MAX_PARTICLES = 200; 
+  final float MIN_PARTICLE_DIAMETER = 2;
+  final float MAX_PARTICLE_DIAMETER = 12;
     
   // define some easy pastel colours
   final color colours[] = { color(252,169,133), 
@@ -429,8 +431,8 @@ class Particle_c {
          // Inverse d, so that the further from the mouse,
          // the slower the additional velocity away. 
          d = 50 - d;
-         velocity.x -= ( d * cos( theta) ) *  0.02;
-         velocity.y -= ( d * sin( theta) ) *  0.02;
+         velocity.x -= ( d * cos( theta) ) *  footRepulsionVelocity;
+         velocity.y -= ( d * sin( theta) ) *  footRepulsionVelocity;
        }
           
     } 

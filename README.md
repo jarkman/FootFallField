@@ -14,3 +14,17 @@ That goes to a Pi 3 running Processing, which infers foot positions from range d
 If you want to tinker, the Processing code has a debug mode in which it'll run without the scanner, simulate footsteps, and accept footsteps from mouse clicks. That makes it very easy to develop new effects without using the scanner and projector.
 
 See http://jarkman.co.uk/catalog/robots/footfallfield.htm for more.
+
+Notes for running on Pi:
+
+We want a low resolution for more speed, so 
+
+$ sudo nano /boot/config.txt
+ then uncomment/edit to set the hdmi mode to (eg)
+hdmi_group=11
+hdmi_mode=18
+
+See http://elinux.org/RPi_Configuration for a list of modes.
+
+You also need to disable the screensaver, I did all the things listed here:
+https://www.raspberrypi.org/forums/viewtopic.php?f=66&t=18200
