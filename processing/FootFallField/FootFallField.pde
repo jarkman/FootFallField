@@ -20,8 +20,10 @@
 import processing.serial.*;
 
 
+
 public static boolean demoMode = false; // set true to run without a real lidar, with simulated footsteps
 public static boolean usingMirror = true; // set true to run when projecting via a mirror to get left/right swap
+
 public static boolean drawDebugFurniture = false; // set true to draw feet, background, etc
 
 public static boolean skipCalibration = true; // set to omit calibration altogether
@@ -36,6 +38,9 @@ public static Calibration calibration;                                  // Manag
 
 public static FootManager footManager;                                  // Manages serial comms, maintains lists of readings and feet, makes simulated feet in demo mode
 public static PersonManager personManager;                              // Manages an array of people inferred from feet
+
+int lastFootMillis = 0;
+int effectChangeMillis = 0;
 
 void setup() 
 {
@@ -84,11 +89,12 @@ void setup()
    menuEffect.addEffect(new RippleEffect());
    menuEffect.addEffect(new ParticleSimEffect() );
 
-   changeEffect(menuEffect.effects.get(0));
+   changeEffect(menuEffect.effects.get(3));
 }
 
 void changeEffect(Effect effect)
 {
+  effectChangeMillis = millis();
   currentEffect = effect;
   currentEffect.start();
 }
@@ -122,6 +128,8 @@ void draw()
         currentEffect.draw(footManager.readings, footManager.feet, personManager.people);
         
       menuEffect.draw(footManager.readings, footManager.feet, personManager.people);
+      
+      doIdleChange();
 
    }
    
@@ -132,6 +140,22 @@ void draw()
   
 }
 
+// If we've been idle for 30 secs, randomly pick a new effect
+void doIdleChange()
+{
+  if( lastFootMillis == 0 || effectChangeMillis == 0 )
+    return;
+    
+  int now = millis();
+  
+  if( lastFootMillis + 30000 < now && // haven't seen a foot for 30 secs
+      lastFootMillis > effectChangeMillis ) // haven't seen a foot since we last changed effect
+    {
+      // pick a random effect
+      println("doIdleChange - changing");
+      changeEffect(menuEffect.effects.get((int) random(menuEffect.effects.size())));
+    }
+}
 
 int lastMouseFootTime = 0;
 
@@ -158,6 +182,8 @@ void notifyNewFoot( Reading foot ) // A new foot arrived, tell the current effec
 {
   if( currentEffect != null )
     currentEffect.notifyNewFoot( foot );
+    
+  lastFootMillis = millis();  
 }
 
 void serialEvent (Serial port)     // Some bytes arrived from the lidar, tell the foot amanger to handle them

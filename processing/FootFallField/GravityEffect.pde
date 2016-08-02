@@ -1,13 +1,13 @@
 // Draw a grid deformed by the gravity of each foot
 
-// with thatnks to http://www.openprocessing.org/sketch/1011
+// with thanks to http://www.openprocessing.org/sketch/1011
 
 class GridPoint
 {
   PVector origin, position;
   float toPlanetMult = 200; // sets range
   float toOriginMult = 0.02;  // sets speed
-
+ 
   GridPoint(int x, int y)
   {
     origin = new PVector(x, y);
@@ -51,6 +51,10 @@ class GridPoint
 
 class GravityEffect extends Effect
 {
+ 
+  float overscan = 0.5;  // how much grid will we make off the screen, as a fraction of width/height ?
+
+
   GridPoint[][] points;
   int w, h;
   
@@ -61,12 +65,13 @@ GravityEffect()
     this.w = 20;
     this.h = 20;
     points = new GridPoint[w][h];
+    
     for (int y = 0; y < h; y++)
     {
       for (int x = 0; x < w; x++)
       {
-        int sx = (int)map(x, 0, w - 1, 0, width - 1),
-            sy = (int)map(y, 0, h - 1, 0, height - 1);
+        int sx = (int)map(x, 0, w - 1, - overscan * width, (1.0 + overscan) * width),
+            sy = (int)map(y, 0, h - 1, - overscan * height, (1.0 + overscan) * height);
         points[x][y] = new GridPoint(sx, sy);
       }
     }

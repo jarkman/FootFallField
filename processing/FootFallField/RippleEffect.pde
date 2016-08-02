@@ -34,7 +34,7 @@ class RippleEffect extends Effect
   float diaIncreaseRate = 6; //diameter increasing rate
   float strokeDecreaseRate = 0.3; //stroke weight decreasing rate
 
-  int maxRipples = 25; // too many ripples makes us run too slow
+  int maxRipples = 20; // too many ripples makes us run too slow
   
   ArrayList<Ripple> ripples = new ArrayList<Ripple>();
   
@@ -68,7 +68,8 @@ class RippleEffect extends Effect
         {
           //render
           strokeWeight(ripple.sw);
-          fill(255,0);
+          //fill(255,0);
+          //noFill();
           stroke(ripple.sr, ripple.sg, ripple.sb, ripple.sa);
           ellipse(ripple.x, ripple.y, ripple.d, ripple.d); 
           i ++;

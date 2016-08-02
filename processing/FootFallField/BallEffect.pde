@@ -26,7 +26,28 @@ class BallEffect extends Effect
   {
  
     noFill();
+    strokeWeight(2);
     ellipseMode(CORNER);
+
+    if( feet != null )
+    {
+      synchronized( feet )  
+      {
+        for( Reading reading : feet)
+        {
+      
+          
+          PVector screenPos = FootFallField.calibration.screenPosForReading( reading );
+          {
+            stroke(60);
+            fill(100, 200, 0);
+            ellipse(screenPos.x, screenPos.y, 40, 40);
+     
+          }
+        }
+      }
+    }
+    
     strokeWeight(ball.sw);
     stroke(ball.sr, ball.sg, ball.sb, ball.sa);
     fill(ball.sr, ball.sg, ball.sb);
@@ -42,21 +63,25 @@ class BallEffect extends Effect
 
     if (ball.y >= height) {
        // if the ball hits the bottom, bounce
-       ball.sp_y = -ball.sp_y * random(0.8, 1.2);     
+       ball.sp_y = -ball.sp_y * random(0.8, 1.2);  
+       ball.y = height-1;
     }
     if (ball.y <= 0) {
       // if the ball hits the top, bounce
       ball.sp_y = -ball.sp_y * random(0.8, 1.2);
+      ball.y = 1;
     }
     
     if (ball.x >= width) {
       //if the ball hits the right, bounce
-       ball.sp_x = -ball.sp_x;     
+       ball.sp_x = -ball.sp_x;   
+       ball.x = width -1;
     }
     
     if (ball.x <= 0) {
       //if the ball hits the left, bounce
       ball.sp_x = -ball.sp_x;
+      ball.x = 1;
     }
     
   }
