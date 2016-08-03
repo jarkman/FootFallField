@@ -24,7 +24,8 @@ class Calibration
     screenWidth = w;
     screenHeight = h;
     
-    //test(); // for debugging calibrartion using hardcoded points
+    if( debugCalibrate )
+      test(); // for debugging calibrartion using hardcoded points
   }
   
   void test()
@@ -33,15 +34,23 @@ class Calibration
     points = new ArrayList<CalibrationPoint>();
     
     // same sequence as CalibrationEffect.markerForN
-    // layout like this on screen, remember that screen origin is in top left, lidar origin is bottom middle!
+    // layout like this on physical floor / screen, remember that screen origin is in top left, lidar origin is bottom middle!
+    // 3  2 
     // 0  1
-    // 3  2                                    lidar points in cm                 screen points in cm
-    points.add( new CalibrationPoint( new Reading( -198,6,millis(),1), new PVector( 12, 17 ) ));
+    //                                   lidar points in cm                 screen points in pixels
+    points.add( new CalibrationPoint( new Reading( -198,6,millis(),1), new PVector( 12, 602 ) ));
+    points.add( new CalibrationPoint( new Reading( 190, 4,millis(),1), new PVector( 910, 590 ) ));
+ 
+    points.add( new CalibrationPoint( new Reading( 196,180,millis(),1), new PVector( 902, 12 ) ));
+    points.add( new CalibrationPoint( new Reading( -194,185,millis(),1), new PVector( 22, 8 ) ));
+  
+  /*
+  points.add( new CalibrationPoint( new Reading( -198,6,millis(),1), new PVector( 12, 17 ) ));
     points.add( new CalibrationPoint( new Reading( 190, 4,millis(),1), new PVector( 910, 9 ) ));
  
     points.add( new CalibrationPoint( new Reading( 196,180,millis(),1), new PVector( 902, 602 ) ));
     points.add( new CalibrationPoint( new Reading( -194,185,millis(),1), new PVector( 22, 590 ) ));
-  
+  */
  
     testPoint( 1, 100 ); // x,y in cm from sensor
     testPoint( 0,0 );
@@ -157,35 +166,36 @@ class Calibration
      println("px " + px + ", py " + py );
  
     
+    // First, work out where px and py (in cm from lidar) lie in the quadrilateral formed by our calibration points (also in cm from lidar)
 
     float C = (float)(a.y - py) * (d.x - px) - (float)(a.x - px) * (d.y - py); //<>//
-      float B = (float)(a.y - py) * (c.x - d.x) + (float)(b.y - a.y) * (d.x - px) - (float)(a.x - px) * (c.y - d.y) - (float)(b.x - a.x) * (d.y - py);
-      float A = (float)(b.y - a.y) * (c.x - d.x) - (float)(b.x - a.x) * (c.y - d.y);
+    float B = (float)(a.y - py) * (c.x - d.x) + (float)(b.y - a.y) * (d.x - px) - (float)(a.x - px) * (c.y - d.y) - (float)(b.x - a.x) * (d.y - py);
+    float A = (float)(b.y - a.y) * (c.x - d.x) - (float)(b.x - a.x) * (c.y - d.y);
 
-      float D = B * B - 4 * A * C;
+    float D = B * B - 4 * A * C;
 
     println("");
     print("CBAD: ");
-     print( C );
-     print(", ");
-     print( B );
-     print( ", " );
-      print(A);
-      print(", ");
-     println( D );
+    print( C );
+    print(", ");
+    print( B );
+    print( ", " );
+    print(A);
+    print(", ");
+    println( D );
      
-     
+    // Now calculate u and v, which are in the range 0->1 and tell us what fraction across & up the quadrilateral our point is 
     println("(-B - sqrt(D)) ", (-B - sqrt(D)));
      
-      float u = (-B - sqrt(D)) / (2 * A);
+    float u = (-B - sqrt(D)) / (2 * A);
 
-      float p1x = a.x + (b.x - a.x) * u;
-      float p2x = d.x + (c.x - d.x) * u;
+    float p1x = a.x + (b.x - a.x) * u;
+    float p2x = d.x + (c.x - d.x) * u;
       
 
-      float v = (px - p1x) / (p2x - p1x);
-      
-      PVector sa = points.get(0).screenPos;
+    float v = (px - p1x) / (p2x - p1x);
+    
+    PVector sa = points.get(0).screenPos;
     PVector sb = points.get(1).screenPos;
     PVector sc = points.get(2).screenPos;
     PVector sd = points.get(3).screenPos;
@@ -204,11 +214,16 @@ class Calibration
      
      
       // u and v are normalised so 0->1 maps to the side of the rectangle
-      // now calculate the screen coordinates for p
+      // now calculate the screen coordinates for p by interpolating into the screen rectangle (in pixels)
       // sa   sb
       // sd   sc 
-      float sx = sa.x + u * (sb.x - sa.x);
-      float sy = sa.y + v * (sc.y - sa.y);
+      float sax = sa.x;
+      float sbx = sb.x;
+      float say = sa.y;
+      float scy = sc.y;
+      
+      float sx = sax + u * (sbx - sax);
+      float sy = say + v * (scy - say);
       
       print("sx sy: ");
       print( sx );
