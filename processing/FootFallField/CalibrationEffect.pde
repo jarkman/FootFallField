@@ -16,6 +16,8 @@ class CalibrationEffect extends Effect
   
   Button button = null;
 
+  PFont font = createFont("Arial",100,true);
+  
     
   void draw(ArrayList<Reading> readings, ArrayList<Reading> feet, ArrayList<Person> people)
   {
@@ -23,9 +25,14 @@ class CalibrationEffect extends Effect
     if( n == -1 ) // first time round
        nextPoint();
 
-
+    
     drawExistingPoints();
     
+    fill(128);
+    textFont(font,100);
+    text("P" + points.size() + " - " + feet.size() + " feet" , 100, 250 );
+
+
     button.draw(readings, feet, people);
     
     if( button.isLocked())
@@ -42,7 +49,7 @@ class CalibrationEffect extends Effect
       nextPoint();
     }
     
-    
+  
       
    
     
@@ -78,10 +85,10 @@ class CalibrationEffect extends Effect
     // layout like this on physical floor / screen, remember that screen origin is in top left, lidar origin is bottom middle!
     // 3  2 
     // 0  1
-      case 0: return new PVector( 0.1 * width, 0.9 * height );
-      case 1: return new PVector( 0.9 * width, 0.9 * height );
-      case 2: return new PVector( 0.9 * width, 0.1 * height );
-      case 3: default: return new PVector( 0.1 * width, 0.1 * height );
+      case 0: return new PVector( 0,  height );
+      case 1: return new PVector( width,height );
+      case 2: return new PVector( width, 0 );
+      case 3: default: return new PVector( 0, 0 );
     }
     
 

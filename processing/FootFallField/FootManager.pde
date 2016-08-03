@@ -220,14 +220,15 @@ void parseBuffer()
       if( traceadd ) println("c3");
       FootFallField.personManager.cleanBeforeRotation( rotationCounter ); 
 
+      /*
        print("got ");
        print(readings.size());
        println(" readings");
        print(feet.size());
        println(" feet");
-     
+     */
        //<>// //<>//
-      println("scanStart");
+      //println("scanStart");
     }
     else if(( reading = scanFoot()) != null)
     {

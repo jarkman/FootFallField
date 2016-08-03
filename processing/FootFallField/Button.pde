@@ -86,7 +86,9 @@ class Button
         if( state == WAITING && millis() - stateStartMillis < 3000 ) // ignore feet for first 3 secs to give time to get there
           return false;
           
-        if( feet.size() == 1 && state == WAITING && y < 0) // must have exactly one foot for calibration
+        if( feet.size() >=1 && feet.size() <= 2 && state == WAITING && y < 0) 
+        // want exactly one foot for calibration
+        // allow 2 because we often see a jittery foot
         {
           x = feet.get(0).x; // set x & y from the first foot we see. foot will have to stay in place for the button time to be confirmed
           y = feet.get(0).y;

@@ -129,25 +129,7 @@ class Calibration
       
     return true;
   }
-  /*
-  PVector screenPosForXY( float px, float py )
-  {
-    // from http://math.stackexchange.com/questions/13404/mapping-irregular-quadrilateral-to-a-rectangle  
-    // ... is to decompose your problem like this  ...
-    
-    if( points == null || points.size() != 4 )  // no calibration data yet
-      return screenPosForXYUncalibrated( px, py ); // just so we can draw something
-      
-    Reading a = points.get(0).foot;
-    Reading b = points.get(1).foot;
-    Reading c = points.get(2).foot;
-    Reading d = points.get(3).foot;
-    
-     print("a " + a.x + ", " + a.y + " b " + b.x + ", " + b.y  );
-     print(" c " + c.x + ", " + c.y + " d " + d.x + ", " + d.y  );
  
-     print("px " + px + ", py " + py );
-   */
    
   PVector screenPosForXY( float px, float py ) //<>//
   {
@@ -159,12 +141,14 @@ class Calibration
     Reading c = points.get(2).foot;
     Reading d = points.get(3).foot;
     
-     println("----------------------");
-     println("a " + a.x + ", " + a.y + " b " + b.x + ", " + b.y  );
-     println(" c " + c.x + ", " + c.y + " d " + d.x + ", " + d.y  );
+    if( traceCalibration )
+    {
+      println("----------------------");
+       println("a " + a.x + ", " + a.y + " b " + b.x + ", " + b.y  );
+       println(" c " + c.x + ", " + c.y + " d " + d.x + ", " + d.y  );
  
      println("px " + px + ", py " + py );
- 
+    }
     
     // First, work out where px and py (in cm from lidar) lie in the quadrilateral formed by our calibration points (also in cm from lidar)
 
@@ -173,7 +157,8 @@ class Calibration
     float A = (float)(b.y - a.y) * (c.x - d.x) - (float)(b.x - a.x) * (c.y - d.y);
 
     float D = B * B - 4 * A * C;
-
+    if( traceCalibration)
+    {
     println("");
     print("CBAD: ");
     print( C );
@@ -186,7 +171,8 @@ class Calibration
      
     // Now calculate u and v, which are in the range 0->1 and tell us what fraction across & up the quadrilateral our point is 
     println("(-B - sqrt(D)) ", (-B - sqrt(D)));
-     
+    }
+    
     float u = (-B - sqrt(D)) / (2 * A);
 
     float p1x = a.x + (b.x - a.x) * u;
@@ -200,7 +186,8 @@ class Calibration
     PVector sc = points.get(2).screenPos;
     PVector sd = points.get(3).screenPos;
     
-    
+    if( traceCalibration)
+    {
       print("uv: ");
       print( u );
      print(", ");
@@ -210,7 +197,7 @@ class Calibration
      print( p1x );
      print( ", " );
       println( p2x );
-      
+    }
      
      
       // u and v are normalised so 0->1 maps to the side of the rectangle
@@ -224,12 +211,13 @@ class Calibration
       
       float sx = sax + u * (sbx - sax);
       float sy = say + v * (scy - say);
-      
+     if( traceCalibration )
+    { 
       print("sx sy: ");
       print( sx );
      print(", ");
      println( sy );
-     
+    }
       return new PVector( (int) sx, (int) sy );
       
     

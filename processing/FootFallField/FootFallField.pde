@@ -29,6 +29,8 @@ public static boolean drawDebugFurniture = true; // set true to draw feet, backg
 public static boolean skipCalibration = false; // set to omit calibration altogether
 public static boolean debugCalibrate = false; // set to debug calibration without the real test rig
 
+public static boolean traceCalibration = false;
+
 Effect calibrationEffect;
 Effect currentEffect;
 Effect debugEffect;
@@ -52,7 +54,7 @@ void setup()
   // sudo nano /boot/config.txt
   // and edit these lines:
   //  hdmi_group=1
-  //  hdmi_mode=17
+  //  hdmi_mode=18
   // and comment in the fullscreen line below
 
   // To run on laptop/on pi during developement, comment in the size() 
@@ -89,7 +91,7 @@ void setup()
    menuEffect.addEffect(new RippleEffect());
    menuEffect.addEffect(new ParticleSimEffect() );
 
-   changeEffect(menuEffect.effects.get(5));
+   changeEffect(menuEffect.effects.get(4));
 }
 
 void changeEffect(Effect effect)

@@ -24,6 +24,26 @@ class Background
   strokeWeight(2);
   rectMode(CENTER);
   
+  fill(0,0,200);
+  
+  /*
+  //traceCalibration = true;
+  // Draw a couple of blue rects to show how calibration has gone
+  // origin
+  PVector screenPos = FootFallField.calibration. screenPosForXY( 10,10 );
+  rect(screenPos.x, screenPos.y, 30,30);
+  // left on baseline
+  screenPos = FootFallField.calibration. screenPosForXY( 10,-100 );
+  rect(screenPos.x, screenPos.y, 30,30);
+  // center 1m out
+  screenPos = FootFallField.calibration. screenPosForXY( 100,0 );
+  rect(screenPos.x, screenPos.y, 30,30);
+  
+  //traceCalibration = false;
+  */
+  
+  
+  // draw the background ranges as red squares  
   fill(204, 102, 0);
   for( int i =0; i < backgroundSegments; i ++ )
       if( backgroundRangeAtAngle[i] != -1 )
@@ -33,8 +53,8 @@ class Background
         int x = (int) ((float) backgroundRangeAtAngle[i] * - cos( angle )); 
         int y = (int) ((float) backgroundRangeAtAngle[i] * sin( angle ));
         
-        PVector screenPos = FootFallField.calibration. screenPosForXY( x, y );
-        rect(screenPos.x, screenPos.y, 10, 10);
+        PVector bPos = FootFallField.calibration. screenPosForXY( x, y );
+        rect(bPos.x, bPos.y, 10, 10);
       }
 }
 
