@@ -21,8 +21,9 @@ import processing.serial.*;
 
 
 
+
 public static boolean demoMode = false; // set true to run without a real lidar, with simulated footsteps
-public static boolean usingMirror = true; // set true to run when projecting via a mirror to get left/right swap
+public static boolean usingMirror = false; // set true to run when projecting via a mirror to get left/right swap
 
 public static boolean drawDebugFurniture = false; // set true to draw feet, background, etc
 
@@ -91,7 +92,9 @@ void setup()
    menuEffect.addEffect(new RippleEffect());
    menuEffect.addEffect(new ParticleSimEffect() );
 
+
    changeEffect(menuEffect.effects.get(3));
+
 }
 
 void changeEffect(Effect effect)

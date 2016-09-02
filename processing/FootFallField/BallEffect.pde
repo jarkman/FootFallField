@@ -46,8 +46,15 @@ class BallEffect extends Effect
              && screenPos.x < (ball.x + ball.xh)  && screenPos.x > (ball.x - ball.xh) ) 
            {
              // if the ball hits the foot, bounce
-             ball.sp_y = -ball.sp_y * random(0.8, 1.2);
-             ball.sp_x = -ball.sp_x * random(0.8, 1.2);
+             //add twice old velocity to the ball so as to move it out from under the foot
+             ball.y = ball.y - 2.0*ball.sp_y;
+             ball.x = ball.x - 2.0*ball.sp_x; 
+            
+             // and reverse the velocity
+             ball.sp_y = -ball.sp_y * random(1.0/1.2, 1.2);
+             ball.sp_x = -ball.sp_x * random(1.0/1.2, 1.2);
+ 
+             // change the foot colour when we have bounced
              fill(250,0,0);
            }
            else
