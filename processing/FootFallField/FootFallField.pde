@@ -22,11 +22,11 @@ import processing.serial.*;
 
 
 public static boolean demoMode = false; // set true to run without a real lidar, with simulated footsteps
-public static boolean usingMirror = false; // set true to run when projecting via a mirror to get left/right swap
+public static boolean usingMirror = true; // set true to run when projecting via a mirror to get left/right swap
 
-public static boolean drawDebugFurniture = true; // set true to draw feet, background, etc
+public static boolean drawDebugFurniture = false; // set true to draw feet, background, etc
 
-public static boolean skipCalibration = false; // set to omit calibration altogether
+public static boolean skipCalibration = true; // set to omit calibration altogether
 public static boolean debugCalibrate = false; // set to debug calibration without the real test rig
 
 public static boolean traceCalibration = false;
@@ -83,7 +83,7 @@ void setup()
    menuEffect = new MenuEffect();
    // Add each effect to the menu here so it can offer them as choices 
    menuEffect.addEffect(new GravityEffect()); 
-   menuEffect.addEffect(new BubbleEffect()); 
+   //menuEffect.addEffect(new BubbleEffect()); 
    menuEffect.addEffect(new BallEffect()); 
    //menuEffect.addEffect(new SplatEffect()); 
 
@@ -91,7 +91,7 @@ void setup()
    menuEffect.addEffect(new RippleEffect());
    menuEffect.addEffect(new ParticleSimEffect() );
 
-   changeEffect(menuEffect.effects.get(4));
+   changeEffect(menuEffect.effects.get(3));
 }
 
 void changeEffect(Effect effect)
